@@ -23,7 +23,7 @@ pipeline {
         }
       }
     }
-    stage('Copy Python Application Source Code to EC2 instance'){
+    stage('Copy Source Code to EC2 instance'){
       steps {
         script {
           sshagent(['devops-linux-private-key']) {
