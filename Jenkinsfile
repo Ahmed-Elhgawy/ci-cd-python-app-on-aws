@@ -28,8 +28,8 @@ pipeline {
         script {
           sshagent(['devops-linux-private-key']) {
             sh """
-              scp -r ./src ec2-user@${EC2_IP}:src/
-              scp ./Dockerfile ec2-user@${EC2_IP}:Dockerfile
+              scp -r -o StrictHostKeyChecking=no ./src ec2-user@${EC2_IP}:src/
+              scp -o StrictHostKeyChecking=no ./Dockerfile ec2-user@${EC2_IP}:Dockerfile
             """
           }
         }
