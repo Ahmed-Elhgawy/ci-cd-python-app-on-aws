@@ -19,7 +19,7 @@ pipeline {
             ).trim()
           }
           echo "${EC2_IP}"
-          echo "${IMAGE_NAME}"
+          echo "${IMAGE_REPO}"
         }
       }
     }
@@ -42,7 +42,7 @@ pipeline {
             sh """
               ssh -o StrictHostKeyChecking=no ec2-user@${EC2_IP} '
                 docker build -t flask .
-                docker tag flask ${IMAGE_NAME}:${BUILD_NUMBER}
+                docker tag flask ${IMAGE_REPO}:${BUILD_NUMBER}
               '
             """
           }
@@ -55,8 +55,8 @@ pipeline {
           sshagent(['devops-linux-private-key']) {
             sh """
               ssh -o StrictHostKeyChecking=no ec2-user@${EC2_IP} '
-                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${IMAGE_NAME}
-                docker push ${IMAGE_NAME}:${BUILD_NUMBER}
+                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${IMAGE_REPO}
+                docker push ${IMAGE_REPO}:${BUILD_NUMBER}
               '
             """
           }
@@ -73,7 +73,7 @@ pipeline {
                   docker stop flask
                   docker rm flask
                 fi
-                docker run -d -p 80:5000 --name flask ${IMAGE_NAME}:${BUILD_NUMBER}
+                docker run -d -p 80:5000 --name flask ${IMAGE_REPO}:${BUILD_NUMBER}
               '
             """
           }
